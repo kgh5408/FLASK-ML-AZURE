@@ -11,13 +11,13 @@ variables:
   azureServiceConnectionId: '16de46d0-07f9-4712-a247-f0870425e5e0'
 
   # Web app name
-  webAppName: 'flask-ml-practical-mlops'
+  webAppName: 'mlazureflask'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
   # Environment name
-  environmentName: 'flask-ml-practical-mlops'
+  environmentName: 'mlazureflask'
 
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
