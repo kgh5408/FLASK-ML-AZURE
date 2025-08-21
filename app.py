@@ -14,18 +14,18 @@ app = Flask(__name__)
 
 def preprocessing(json_payload):
     sentences = json_payload['message']
-    tensor = tf.constant(sentences)
+    tensor = tf.constant([[sentence] for sentence in sentences])
     return tensor
 
 
-def postprocessing(json_payload, prediction_tensor):
-    prediction = prediction_tensor.numpy()
+def postprocessing(json_payload, prediction_dict):
+    prediction = prediction_dict['dense_36'].numpy()
     sentences = json_payload['message']
     response = {}
     d = {}
     for idx, sentence in enumerate(sentences):
-        idx = np.argmax(prediction[idx])
-        d[sentence] = 'ham' if idx == 1 else 'spam'
+        pred_idx = np.argmax(prediction[idx])
+        d[sentence] = 'ham' if pred_idx == 1 else 'spam'
     response['request'] = sentences
     response['response'] = d
     return response
@@ -40,13 +40,15 @@ def home():
 # POST 메소드로 예측 요청을 처리하는 엔드포인트
 @app.route("/predict", methods=['POST'])
 def predict():
-    model = tf.keras.models.load_model('./saved_model')
+    # Keras 3에서 TensorFlow SavedModel을 로딩하는 방법
+    model = tf.keras.layers.TFSMLayer('./saved_model', call_endpoint='serving_default')
     app.logger.info(f"Model loaded.")
     
     json_payload = request.json # POST 요청으로 전달된 JSON 데이터를 읽음
     app.logger.info(f"JSON payload: {json_payload}")
 
     preprocessed_payload = preprocessing(json_payload)
+    # TFSMLayer는 직접 텐서를 받음
     prediction = model(preprocessed_payload)
     app.logger.info(f"Prediction: {prediction}")
 

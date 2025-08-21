@@ -2,7 +2,7 @@
 
 1. 가상 환경을 생성하고 source 명령으로 활성화
 ```
-python3.10 -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 ```
 2. make install 명령 실행
@@ -20,7 +20,7 @@ python app.py
 
 # Azure 업로드 
 
-* [[Azure 공식 문서]](https://learn.microsoft.com/en-us/azure/devops/pipelines/ecosystems/python-webapp?view=azure-devops&tabs=linux)
+[[Azure 공식 문서]](https://learn.microsoft.com/en-us/azure/devops/pipelines/ecosystems/python-webapp?view=azure-devops&tabs=linux)
 
 1. 애저 클라우드 셸 실행
 2. 애저 클라우드 셸에서 깃허브 저장소 클론
