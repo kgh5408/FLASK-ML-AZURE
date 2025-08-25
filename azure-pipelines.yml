@@ -22,8 +22,8 @@ variables:
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
 
-  # Python version: 3.13
-  pythonVersion: '3.13'
+  # Python version: 3.12
+  pythonVersion: '3.12'
 
 stages:
 - stage: Build
@@ -33,6 +33,10 @@ stages:
     pool:
       name: 'Default'
     steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(pythonVersion)'
+      displayName: 'Use Python $(pythonVersion)'
 
     - script: |
         python -m venv antenv
@@ -69,7 +73,10 @@ stages:
       runOnce:
         deploy:
           steps:
-
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '$(pythonVersion)'
+            displayName: 'Use Python version'
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App : mlazureflask'
             inputs:
