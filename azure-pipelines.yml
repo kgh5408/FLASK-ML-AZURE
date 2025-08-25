@@ -31,7 +31,7 @@ stages:
   jobs:
   - job: BuildJob
     pool:
-      name: 'Default'
+      vmImage: $(vmImageName)
     steps:
     - task: UsePythonVersion@0
       inputs:
@@ -42,7 +42,7 @@ stages:
         python -m venv antenv
         source antenv/bin/activate
         python -m pip install --upgrade pip
-        pip install .
+        pip install setup
         pip install -r requirements.txt
       workingDirectory: $(projectRoot)
       displayName: "Install requirements"
@@ -67,18 +67,20 @@ stages:
   jobs:
   - deployment: DeploymentJob
     pool:
-      name: 'Default'
+      vmImage: $(vmImageName)
     environment: $(environmentName)
     strategy:
       runOnce:
         deploy:
           steps:
+
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '$(pythonVersion)'
             displayName: 'Use Python version'
+
           - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App : mlazureflask'
+            displayName: 'Deploy Azure Web App : $(webAppName)'
             inputs:
               azureSubscription: $(azureServiceConnectionId)
               appName: $(webAppName)
